@@ -6,7 +6,7 @@ mock.emotions = function() {
 		'sadness',
 		'anger',
 		'fear',
-		'digust',
+		'disgust',
 		'surprise'
 	];
 
