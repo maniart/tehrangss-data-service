@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/maniart/tehrangss-data-service#readme",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "socket.io": "^2.0.3"
   }
