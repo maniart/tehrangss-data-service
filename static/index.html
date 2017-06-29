@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tehran Inside Out</title>
+	<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+<body>
+
+	<div class="container">
+		
+		<div class="description">
+			<h1>
+				Tehran Inside Out
+			</h1>		
+			<p>
+				This summer from July 3rd to 17th, Tehran hosts its 2nd <a href="http://globalschool.iaac.net/tehran/" target="_blank">
+					Global Summer School		
+				</a>, an intensive two week workshop focusing on revealing hidden aspects of urban landscapes through real time data collection, analysis, visualization, prototyping and fabrication. Combining hands-on workshops and theoretical lectures, participants will work together to use DYI tools to collect emotion data from citizens and create immersive installations and interventions that bring practices of design, architecture, fabrication &amp; programing together to propose platforms that activate and reshape urban landscapes.	
+			</p>
+			
+			<p>
+				This site serves as an entry point and documentation for the web service backing data collection, parsing and distribution for this workshop. Using these endpoints, the participants will be able to collect and access realtime emotion data from Tehran, and use it to prototype and build their data-driven installations.
+			</p>
+		</div>
+
+		<div class="documentation">
+			<h2>Endpoints</h2>
+				<ul>
+					<li>
+<code>[GET] /emotions</code>
+<br>
+<code>params: count[INT]</code>
+<br>
+					Returns a json object with the size specified via the `count` parameter. The object contains `timestamp`, `location` and one or more emotion vectores.
+					</li>
+
+					<li>
+<code>[POST] /emotion</code>	
+<br>
+<code></code>
+					Use this endpoint to post an emotion record to the service. The request body should adhere to the following schema
+<code>
+	{
+		location: {
+			lon: FLOAT
+			lat: FLOAT
+		},
+		emotions: {
+			anger: FLOAT,
+			fear: FLOAT,
+			happiness: FLOAT,
+			sadness: FLOAT,
+			surprise: FLOAT,
+			disgust: FLOAT
+		}
+	}
+</code>
+					</li>
+				</ul>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="./main.js"></script>
+</body>
+</html>
