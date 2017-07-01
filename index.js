@@ -8,13 +8,16 @@ var mock = require('./utils/mock.js');
 
 var mockEmotions = mock.emotions;
 
+var dbConfig = require('./.dbconfig.json');
+var dbURL = dbConfig.url;
+
 var app = express();
 var router = express.Router();
 
 app.use(express.static('static'));
 app.use(bodyParser.json());
 
-MongoClient.connect('mongodb://tehrangssuser:lifeinbklyn@ds143532.mlab.com:43532/tehrangss', function(err, db) {
+MongoClient.connect(dbURL, function(err, db) {
 	if(err) {
 		console.log('Failed to connect to db: ', err);
 		return;
