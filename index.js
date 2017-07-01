@@ -11,8 +11,8 @@ var mockEmotions = mock.emotions;
 var app = express();
 var router = express.Router();
 
-app.use(bodyParser.json());
 app.use(express.static('static'));
+app.use(bodyParser.json());
 
 
 router.get('/emotions/:count', function(req, res) {
@@ -26,6 +26,13 @@ router.get('/emotions/:count', function(req, res) {
 	}
 	// res.writeHead(200, {'Content-Type': 'application/json'});
 	res.send(ret);
+});
+
+router.post('/emotion', function(req, res) {
+	console.log('test');
+	var body = req.body;
+	console.dir(req.body);
+	res.send('ok');
 });
 
 router.get('/', function (req, res) {
