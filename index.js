@@ -3,7 +3,7 @@ var express = require('express');
 var io = require('socket.io');
 var path = require('path');
 var bodyParser = require('body-parser');
-
+var MongoClient = require('mongodb').MongoClient;
 var mock = require('./utils/mock.js');
 
 var mockEmotions = mock.emotions;
@@ -14,6 +14,14 @@ var router = express.Router();
 app.use(express.static('static'));
 app.use(bodyParser.json());
 
+MongoClient.connect('mongodb://tehrangssuser:lifeinbklyn@ds143532.mlab.com:43532/tehrangss', function(err, db) {
+	if(err) {
+		console.log('Failed to connect to db: ', err);
+		return;
+	}
+	console.log('Connected to DB')
+
+});
 
 router.get('/emotions/:count', function(req, res) {
 	var countParam = req.params.count || 10;
