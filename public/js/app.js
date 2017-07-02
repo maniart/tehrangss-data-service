@@ -8,6 +8,12 @@ app.emotionTrackers = {
 	surprise: null
 };
 
+app.currentEmotionTracker = null;
+
+app.setCurrentEmotionTracker = function setCurrentEmotionTracker(name) {
+	app.currentEmotionTracker = name;
+}
+
 app.endPoint = '/api/emotion';
 
 app.sync = function sync() {

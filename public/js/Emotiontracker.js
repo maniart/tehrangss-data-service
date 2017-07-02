@@ -1,6 +1,7 @@
-function EmotionTracker() {
+function EmotionTracker(instructions) {
 	this.rawValue = 0;
 	this.normalizedValue = 0;
+	this.instructions = instructions;
 }
 
 EmotionTracker.prototype.set = function set(newValue) {
@@ -11,6 +12,15 @@ EmotionTracker.prototype.normalize = function normalize() {
 
 };
 
+EmotionTracker.prototype.containerEl = $('body');
+
+EmotionTracker.prototype.instructionsEl = $('.instructions');
+
+EmotionTracker.prototype.setInstructions = function() {
+	this.instructionsEl.text(this.instructions);
+	return this;
+}
+
 EmotionTracker.map = function map(inputMin, inputMax, outputMin, outputMax, floating) {
 	// map 
 	var input = this.rawValue;
@@ -20,7 +30,9 @@ EmotionTracker.map = function map(inputMin, inputMax, outputMin, outputMax, floa
 
 EmotionTracker.init = function init() {
 	console.log('init');
-	return this.setup();
+	return this
+		.setup()
+		.setInstructions();
 }
 
 EmotionTracker.prototype.setup = function setup() {
@@ -32,7 +44,7 @@ EmotionTracker.prototype.tearDown = function tearDown() {
 	console.log('tear down');
 }
 
-EmotionTracker.prototype.registerEvents() = function registerEvents() {
+EmotionTracker.prototype.registerEvents = function registerEvents() {
 	console.log('register events');
 	return this;
 }
