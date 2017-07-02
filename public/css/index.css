@@ -13,6 +13,10 @@ body {
 	background: white;
 	position: absolute;
 	top: 10px;
+	background: white;
+	border: 2px solid black;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
 	left: 50%;
 	transform: translate(-50%, 0);
 	-webkit-transform: translateX(-50%);
@@ -55,7 +59,14 @@ body {
 	-webkit-border-radius: 45px;
 	direction: rtl;
 	font-weight: bold;
+	line-height: 2.5;
 	-moz-border-radius: 45px;
 	text-align: center;
+}
+
+.submit:focus, 
+.submit:active {
+	background: black;
+	color: white;
 }
 
