@@ -14,7 +14,7 @@ var dbURL = dbConfig.url;
 var app = express();
 var router = express.Router();
 
-app.use(express.static('static'));
+app.use(express.static('public'));
 app.use(bodyParser.json());
 
 MongoClient.connect(dbURL, function(err, db) {
@@ -47,7 +47,11 @@ router.post('/emotion', function(req, res) {
 });
 
 router.get('/', function (req, res) {
-	res.sendFile(path.join(__dirname, 'static', '/index.html'));
+	res.sendFile(path.join(__dirname, 'public', '/index.html'));
+});
+
+router.get('/about', function (req, res) {
+	res.sendFile(path.join(__dirname, 'public', '/about.html'));
 });
 
 app.use(router);
