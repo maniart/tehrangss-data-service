@@ -1,7 +1,7 @@
 function EmotionTracker(instructions) {
 	this.rawValue = 0;
 	this.normalizedValue = 0;
-	this.instructions = instructions;
+	this.instructions = instructions || '';
 }
 
 EmotionTracker.prototype.set = function set(newValue) {

@@ -7,7 +7,6 @@ body {
 	margin: 0;
 	font-family: sans-serif;
 	font-size: 16px;
-	background: blue;
 }
 
 .instructions {
@@ -31,4 +30,32 @@ body {
 	opacity: 0;
 }
 
+.next {
+	width: 45px;
+	height: 45px;
+	border-radius: 50%;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border: 2px solid black;
+	background: white;
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+}
+
+.submit {
+	height: 45px;
+	width: 100px;
+	bottom: 10px;
+	left: 50%;
+	position: fixed;
+	transform: translateX(-50%);
+	border: 2px solid black;
+	border-radius: 45px;
+	-webkit-border-radius: 45px;
+	direction: rtl;
+	font-weight: bold;
+	-moz-border-radius: 45px;
+	text-align: center;
+}
 
