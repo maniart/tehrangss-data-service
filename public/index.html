@@ -3,7 +3,7 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="./bower_components/normalize-css/normalize.css">
-	<script type="text/javascript" src="./bower_components/jquery/dist/jquery.slim.min.js"></script>
+	<script type="text/javascript" src="./bower_components/jquery/dist/jquery.min.js"></script>
 	<title>Emotion Tracker</title>
 </head>
 <body>
@@ -13,39 +13,77 @@
 	
 	<div id="out"></div>
 
-	<form id="image-upload">
-		<input type="file" accept="image/*">
+	<form id="image-upload" method="post" >
+		<input type="file" id="image-field" name="image-field" accept="image/*">
 		<button type="submit">Upload</button>	
 	</form>
 	
 
 	<script type="text/javascript">
-		function geoFindMe() {
-		  var output = document.getElementById("out");
+		window.__location  =  {
+			lon: 0.0,
+			lat: 0.0
+		};
 
-		  if (!navigator.geolocation){
-		    output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
-		    return;
-		  }
+		var $form = $('#image-upload');
+		$(document).ready(function() {
+		
+			$form.on('submit', function(e) {
+				// console.log();
+				e.preventDefault();
+				e.stopPropagation();
+				
 
-		  function success(position) {
-		    var latitude  = position.coords.latitude;
-		    var longitude = position.coords.longitude;
+				$.ajax({
+					url: '/api/submit',
+					type: 'POST',
+					beforeSend: function(xhrObj){
+			      // Request headers
+			      xhrObj.setRequestHeader('Content-Type','application/json');
+			    },
+					data: JSON.stringify(window.__location),
+					cache: false,
+	        contentType: false,
+	        processData: false
+				}).done(function() {
+					console.log('done ', arguments);
+				}).fail(function(e) {
+					console.log('fail', e);
+				}).always(function() {
+					console.log('always');
+					// window.__location = {};
+				});
+			});
 
-		    output.innerHTML = '<p>Latitude is ' + latitude + '° <br>Longitude is ' + longitude + '°</p>';
+			function geoFindMe() {
+			  var output = document.getElementById("out");
 
-		  }
+			  if (!navigator.geolocation){
+			    output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
+			    return;
+			  }
 
-		  function error() {
-		    output.innerHTML = "Unable to retrieve your location";
-		  }
+			  function success(position) {
+			    console.log(position);
+			    window.__location.lon = position.coords.longitude;
+			    window.__location.lat = position.coords.latitude;
+			    
+			    output.innerHTML = '<p>Latitude is ' + window.__location.lat + '° <br>Longitude is ' + window.__location.lon + '°</p>';
 
-		  output.innerHTML = "<p>Locating…</p>";
+			  }
 
-		  navigator.geolocation.getCurrentPosition(success, error);
-		}
+			  function error() {
+			    output.innerHTML = "Unable to retrieve your location";
+			  }
 
-		geoFindMe();
+				  output.innerHTML = "<p>Locating…</p>";
+
+				  navigator.geolocation.getCurrentPosition(success, error);
+			}
+
+			geoFindMe();
+		});
+		
 	</script>
 </body>
 </html>

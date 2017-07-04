@@ -5,11 +5,35 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var mock = require('./utils/mock.js');
-
 var mockEmotions = mock.emotions;
+var mongoose = require('mongoose');    
+var Schema = mongoose.Schema;
+var ObjectIs = Schema.ObjectId;
 
+// Model
+var EmotionSchema = new Schema({
+	date: { type: Date, default: Date.now },
+	lon: { type: Number, default: 0.0 },
+	lat: { type: Number, default: 0.0 },
+	happiness: { type: Number, default: 0.0 },
+	sadness: { type: Number, default: 0.0 },
+	anger: { type: Number, default: 0.0 },
+	fear: { type: Number, default: 0.0 },
+	surprise: { type: Number, default: 0.0 },
+	disgust: { type: Number, default: 0.0 },
+});
+
+var Emotion = mongoose.model('Emotion', EmotionSchema);
+// db config 
 var dbConfig = require('./.dbconfig.json');
 var dbURL = dbConfig.url;
+
+// mongoose stuff
+mongoose.connect(dbURL);
+
+var db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
 
 var app = express();
 var router = express.Router();
@@ -17,13 +41,21 @@ var router = express.Router();
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
-MongoClient.connect(dbURL, function(err, db) {
-	if(err) {
-		console.log('Failed to connect to db: ', err);
-		return;
-	}
-	console.log('Connected to DB')
 
+app.post('/api/submit', function(req, res) {
+	console.log(req.body);
+	var emotion = mockEmotions();
+	new Emotion({
+		lon: req.body.lon,
+		lat: req.body.lat,
+		fear: emotion.fear,
+		happiness: emotion.happiness,
+		sadness: emotion.sadness,
+		surprise: emotion.surprise,
+		disgust: emotion.disgust,
+		anger: emotion.anger
+	}).save();
+	res.sendStatus(200);
 });
 
 router.get('/emotions/:count', function(req, res) {
@@ -45,6 +77,7 @@ router.post('/emotion', function(req, res) {
 	console.dir(req.body);
 	res.send('ok');
 });
+
 
 router.get('/', function (req, res) {
 	res.sendFile(path.join(__dirname, 'public', '/index.html'));
