@@ -10,7 +10,14 @@
 	
 
 	<p><button onclick="geoFindMe()">Show my location</button></p>
+	
 	<div id="out"></div>
+
+	<form id="image-upload">
+		<input type="file" accept="image/*">
+		<button type="submit">Upload</button>	
+	</form>
+	
 
 	<script type="text/javascript">
 		function geoFindMe() {
@@ -27,10 +34,6 @@
 
 		    output.innerHTML = '<p>Latitude is ' + latitude + '° <br>Longitude is ' + longitude + '°</p>';
 
-		    var img = new Image();
-		    img.src = "https://maps.googleapis.com/maps/api/staticmap?center=" + latitude + "," + longitude + "&zoom=13&size=300x300&sensor=false";
-
-		    output.appendChild(img);
 		  }
 
 		  function error() {
@@ -41,6 +44,8 @@
 
 		  navigator.geolocation.getCurrentPosition(success, error);
 		}
+
+		geoFindMe();
 	</script>
 </body>
 </html>
