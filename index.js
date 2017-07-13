@@ -23,7 +23,17 @@ var EmotionSchema = new Schema({
 	disgust: { type: Number, default: 0.0 },
 });
 
+var TextSchema = new Schema({
+	date: { type: Date, default: Date.now },
+	lon: { type: Number, default: 0.0 },
+	lat: { type: Number, default: 0.0 },
+	text: { type: String, default: ''},
+	emotion: { type: String, default: '' }
+});
+
 var Emotion = mongoose.model('Emotion', EmotionSchema);
+var Text = mongoose.model('TextSchema', TextSchema);
+
 // db config 
 var dbConfig = require('./.dbconfig.json');
 var dbURL = dbConfig.url;
@@ -54,6 +64,17 @@ app.post('/api/submit', function(req, res) {
 		surprise: emotion.surprise,
 		disgust: emotion.disgust,
 		anger: emotion.anger
+	}).save();
+	res.sendStatus(200);
+});
+
+app.post('/api/submit-text', function(req, res) {
+	console.log(req.body);
+	new Text({
+		lon: req.body.lon,
+		lat: req.body.lat,
+		text: req.body.text,
+		emotion: req.body.emotion
 	}).save();
 	res.sendStatus(200);
 });
