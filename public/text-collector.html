@@ -25,6 +25,25 @@
 			background-color: hsl(0, 100%, 50%); /*red*/
 			animation: hue 3s infinite alternate;
 		}
+		.loader {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			font-size: 4em;
+			color: #fff;
+			font-weight: bold
+		}
+
+		.loader .inner {
+			position: absolute;
+			top: 50%;
+			left: 5%;
+			transform: translateY(-50%);
+			-moz-transform: translateY(-50%);
+			-webkit-transform: translateY(-50%);
+		}
 		@keyframes hue {
 			/*hue will animate from 0 to 360. Saturation and Lightness remain constant*/
 			20% {background-color: hsl(72, 100%, 50%);}
@@ -113,6 +132,7 @@
 	<div class="emotion" data-emotion="disgust">Disgusted</div>
 	<div class="emotion" data-emotion="surprise">Surprised</div>
 
+	<div class="loader hue"><div class="inner">Submitting your response ...</div></div>
 
 	<form id="text-upload" method="post" >
 		<div class="guide">Type Something ...</div>
@@ -122,6 +142,10 @@
 	
 
 	<script type="text/javascript">
+		$loader = $('.loader');
+
+		$loader.hide();
+
 		var defaultState = {
 			emotion: '',
 			text: '',
@@ -151,10 +175,12 @@
 					console.log('fail', e);
 					alert('Failed to submit your text :(');
 				}).always(function() {
+					$loader.fadeOut();
 					console.log('always');
 					window.state = Object.assign({}, defaultState);
 					$emotion.removeClass('active');
 					// window.__location = {};
+					$textInput.val('');
 				});
 		}
 
@@ -168,6 +194,10 @@
 			window.state.emotion = e.target.innerText;
 		});
 
+		$textInput.on('blur', function() {
+			window.state.text = $textInput.val();
+		});
+
 		var $form = $('#text-upload');
 		$(document).ready(function() {
 			
@@ -176,7 +206,7 @@
 				// console.log();
 				e.preventDefault();
 				e.stopPropagation();
-				
+				$loader.fadeIn();
 				geoFindMe(save);
 				
 			});
