@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="./bower_components/normalize-css/normalize.css">
+	<script type="text/javascript" src="./bower_components/jquery/dist/jquery.min.js"></script>
+	<title>Emotion Tracker</title>
+	<style type="text/css">
+		* {
+		  box-sizing: border-box;
+		}
+		html, body {
+			max-width: 100%;
+			height: 100%;
+		}
+
+		body {
+			padding: 15px;
+			font-family: sans-serif;
+			color: white;
+		}
+
+		.hue {
+			z-index: 999;
+			background-color: hsl(0, 100%, 50%); /*red*/
+			animation: hue 3s infinite alternate;
+		}
+		@keyframes hue {
+			/*hue will animate from 0 to 360. Saturation and Lightness remain constant*/
+			20% {background-color: hsl(72, 100%, 50%);}
+			40% {background-color: hsl(144, 100%, 50%);}
+			60% {background-color: hsl(216, 100%, 50%);}
+			80% {background-color: hsl(288, 100%, 50%);}
+			100% {background-color: hsl(360, 100%, 50%);}
+		}
+
+
+		.bg {
+			background-color: hsl(0, 100%, 50%); /*red*/
+			animation: hue 10s infinite alternate;
+		}
+		@keyframes bg {
+			/*hue will animate from 0 to 360. Saturation and Lightness remain constant*/
+			20% {background-color: hsl(100, 100%, 50%);}
+			40% {background-color: hsl(100, 100%, 50%);}
+			60% {background-color: hsl(100, 100%, 50%);}
+			80% {background-color: hsl(100, 100%, 50%);}
+			100% {background-color: hsl(100, 100%, 50%);}
+		}
+		
+		#submit {
+			position: fixed;
+			border: 4px solid white;
+			background: white;
+			bottom: 20px;
+			left: 50%;
+			font-weight: bold;
+			transform: translateX(-50%);
+			-moz-transform: translateX(-50%);
+			-webkit-transform: translateX(-50%);
+			border-radius: 30px;
+		}
+
+		.text-input {
+			border: none;
+			width: 100%;
+			max-width: 100%;
+			height: 200px;
+			padding: 20px;
+			vertical-align: middle;
+		}
+		.emotion {
+			border: 4px solid white;
+			min-width: 20%;
+			width: auto;
+			float: left;
+			margin: 0 2% 2% 0;
+			color: white;
+			text-align: center;
+			letter-spacing: 1px;
+			font-size: 1.2em;
+			padding: 2%;
+		}
+		.emotion.active {
+			background: white;
+			color: #ccc;
+		}
+		.guide {
+			padding: 10px;
+			margin: 10px;
+			font-size: .8em;
+			color: #fff;
+			margin-left: 0;
+			padding-left: 0;
+			float: left;
+			clear: both;
+		}
+	</style>
+</head>
+<body class="bg">
+	
+
+	<!-- <p><button onclick="geoFindMe()">Show my location</button></p> -->
+	
+	<h1 style="border-bottom: 4px solid white; margin-bottom: 10px; padding-bottom:3px;">
+		Tehran GSS <br>Text Collector
+	</h1>	
+
+	<div class="emotion" data-emotion="happiness">Happy</div>
+	<div class="emotion" data-emotion="sadness">Sad</div>
+	<div class="emotion" data-emotion="anger">Angry</div>
+	<div class="emotion" data-emotion="fear">Afraid</div>
+	<div class="emotion" data-emotion="disgust">Disgusted</div>
+	<div class="emotion" data-emotion="surprise">Surprised</div>
+
+
+	<form id="text-upload" method="post" >
+		<div class="guide">Type Something ...</div>
+		<textarea name="text" class="text-input"></textarea>
+		<button id="submit" type="submit">Submit</button>	
+	</form>
+	
+
+	<script type="text/javascript">
+		var defaultState = {
+			emotion: '',
+			text: '',
+			lon: 0,
+			lat: 0
+		};
+
+		window.state = Object.assign({}, defaultState);
+
+
+		function save() {
+			$.ajax({
+					url: '/api/submit-text',
+					type: 'POST',
+					beforeSend: function(xhrObj){
+			      	// Request headers
+			      	xhrObj.setRequestHeader('Content-Type','application/json');
+			    },
+					data: JSON.stringify(window.state),
+					cache: false,
+	        contentType: false,
+	        processData: false
+				}).done(function() {
+					console.log('done ', arguments);
+					alert('Your text has been submitted!');
+				}).fail(function(e) {
+					console.log('fail', e);
+					alert('Failed to submit your text :(');
+				}).always(function() {
+					console.log('always');
+					window.state = Object.assign({}, defaultState);
+					$emotion.removeClass('active');
+					// window.__location = {};
+				});
+		}
+
+		var $textInput = $('.text-input');
+
+		var $emotion = $('.emotion');
+
+		$emotion.on('click', function(e) {
+			$emotion.removeClass('active');
+			$(e.target).toggleClass('active');
+			window.state.emotion = e.target.innerText;
+		});
+
+		var $form = $('#text-upload');
+		$(document).ready(function() {
+			
+		
+			$form.on('submit', function(e) {
+				// console.log();
+				e.preventDefault();
+				e.stopPropagation();
+				
+				geoFindMe(save);
+				
+			});
+
+			function geoFindMe(callback) {
+			  if (!navigator.geolocation){
+			    return;
+			  }
+
+			  function success(position) {
+			    // console.log(position);
+			    
+			    window.state.lon = position.coords.longitude;
+			    window.state.lat = position.coords.latitude;
+
+			    if(callback) {
+			    	callback();
+			    }
+
+			  }
+
+			  function error() {
+			  	if(callback) {
+			    	callback();
+			    }
+			  	console.log('error with location');
+			  }
+
+
+				navigator.geolocation.getCurrentPosition(success, error);
+			}
+
+			geoFindMe();
+		});
+		
+	</script>
+</body>
+</html>

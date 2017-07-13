@@ -4,7 +4,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="./bower_components/normalize-css/normalize.css">
 	<script type="text/javascript" src="./bower_components/jquery/dist/jquery.min.js"></script>
-	<title>Emotion Tracker</title>
+	<title>Tehran GSS 2017</title>
 	<style type="text/css">
 		* {
 		  box-sizing: border-box;
@@ -15,47 +15,9 @@
 		}
 
 		body {
-			padding: 15px;
 			font-family: sans-serif;
 			color: white;
 		}
-
-		#loader {
-			position: absolute;
-			top: 0;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			/*background-color: rgba(255, 255, 255, .85);*/
-			transform: translateX(-100%);	
-			-webkit-transform: translateX(-100%);	
-			-moz-transform: translateX(-100%);	
-			transition: 250ms ease all;
-			-webkit-transition: 250ms ease-in all;
-			-moz-transition: 250ms linear-in all;
-			opacity: 0;
-			color: white;
-			font-weight: 900;
-			letter-spacing: 1;
-		}
-		#loader.visible {
-			transform: translateX(0%);	
-			-webkit-transform: translateX(0%);	
-			-moz-transform: translateX(0%);	
-			opacity: 1;
-		}
-
-		#loader .text {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			width: 100%;
-			font-size: 2em;
-			transform: translate(-50%, -50%); 
-			-webkit-transform: translate(-50%, -50%); 
-			-moz-transform: translate(-50%, -50%); 
-		}
-
 		.hue {
 			z-index: 999;
 			background-color: hsl(0, 100%, 50%); /*red*/
@@ -83,132 +45,56 @@
 			80% {background-color: hsl(100, 100%, 50%);}
 			100% {background-color: hsl(100, 100%, 50%);}
 		}
-		#out {
-			border-bottom: 4px solid white;
-			padding-bottom: 3px;
-			margin-bottom: 10px;
-		}
-		#submit {
-			position: fixed;
-			border: 4px solid white;
+
+		.nav {
+			width: 98%;
+			height: 48%;
+			position: absolute;
+			text-align: center;
 			background: white;
-			bottom: 20px;
-			left: 50%;
+			
+			right: 1%;
+			left: 1%;
+			bottom: 50%;
 			font-weight: bold;
-			transform: translateX(-50%);
-			-moz-transform: translateX(-50%);
-			-webkit-transform: translateX(-50%);
-			border-radius: 30px;
+			color: #ccc;
+			text-decoration: none;
+			font-size: 4em;
 		}
+		.inner {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+		.nav.top {
+			top: 1%;
+			bottom: 52%;
+		}
+		.nav.bottom {
+			top: 50%;
+			bottom: 1%
+		}
+
+
 	</style>
 </head>
 <body class="bg">
-	
 
-	<!-- <p><button onclick="geoFindMe()">Show my location</button></p> -->
-	
-	<h1 style="border-bottom: 4px solid white; margin-bottom: 10px; padding-bottom:3px;">
-		Tehran GSS <br>Emotion Gadget
-	</h1>	
-
-	<div id="out"></div>
-
-	<div id="loader" class="hue">
-		
-		
-
-		<div class="text">
-			Loading ...
+	<a class="nav top" href="./emotion-tracker.html">
+		<div class="inner">
+			Emotion Tracker	
 		</div>
+	</a>
 
-	</div>
-
-	<form id="image-upload" method="post" >
-		<input type="file" id="image-field" label="Snap a photo" name="image-field" accept="image/*">
-		<button id="submit" type="submit">Upload</button>	
-	</form>
+	<a class="nav bottom" href="./text-collector.html">
+		<div class="inner">
+			Text Collecor
+		</div>
+	</a>
 	
-
-	<script type="text/javascript">
-		window.__location  =  {
-			lon: 0.0,
-			lat: 0.0
-		};
-
-		function save() {
-			$.ajax({
-					url: '/api/submit',
-					type: 'POST',
-					beforeSend: function(xhrObj){
-			      // Request headers
-			      xhrObj.setRequestHeader('Content-Type','application/json');
-			    },
-					data: JSON.stringify(window.__location),
-					cache: false,
-	        contentType: false,
-	        processData: false
-				}).done(function() {
-					console.log('done ', arguments);
-					alert('Emotion captured!');
-				}).fail(function(e) {
-					console.log('fail', e);
-					alert('Failed to capture emotion.');
-				}).always(function() {
-					console.log('always');
-					$('#loader').removeClass('visible');
-					// window.__location = {};
-				});
-		}
-
-		var $form = $('#image-upload');
-		$(document).ready(function() {
+	
+	
 		
-			$form.on('submit', function(e) {
-				// console.log();
-				e.preventDefault();
-				e.stopPropagation();
-				
-				$('#loader').addClass('visible');
-				geoFindMe(save);
-				
-			});
-
-			function geoFindMe(callback) {
-			  var output = document.getElementById("out");
-			  $('#loader .text').html('Updating<br> your<br> location . . .');
-			  $('#loader').addClass('visible');
-			  if (!navigator.geolocation){
-			    output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
-			    return;
-			  }
-
-			  function success(position) {
-			    // console.log(position);
-			    
-			    window.__location.lon = position.coords.longitude;
-			    window.__location.lat = position.coords.latitude;
-			    
-			    output.innerHTML = '<p>Latitude ' + window.__location.lat + '° <br>Longitude  ' + window.__location.lon + '°</p>';
-
-			    if(callback) {
-			    	callback();
-			    }
-
-			  	$('#loader').removeClass('visible');
-			  }
-
-			  function error() {
-			    output.innerHTML = "Unable to retrieve your location";
-			  }
-
-				  output.innerHTML = "<p>Locating…</p>";
-
-				  navigator.geolocation.getCurrentPosition(success, error);
-			}
-
-			geoFindMe();
-		});
-		
-	</script>
 </body>
 </html>
